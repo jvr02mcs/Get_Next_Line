@@ -10,49 +10,11 @@ int	ft_strlen(const char *s)
 	return (c);
 }
 
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s != '\0')
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if ((char)c == '\0')
-		return ((char *)s);
-	return (NULL);
-}
-void	*ft_memset(void *s, int c, size_t n)
-{
-	unsigned char	*p;
-
-	p = (unsigned char *)s;
-	while (n > 0)
-	{
-		p[n - 1] = (unsigned char)c;
-		n--;
-	}
-	return (s);
-}
-
-void	*ft_calloc(size_t c, size_t n)
-{
-	size_t	t;
-	void	*p;
-
-	t = c * n;
-	p = malloc(t);
-	if (p != NULL)
-		ft_memset(p, 0, t);
-	return (p);
-}
-
 char	*ft_strdup(const char *s)
 {
 	char	*str;
 	int		i;
-
-	str = (char *)malloc (sizeof(char) * ft_strlen(s) + 1);
+	str = (char *)malloc(sizeof(char) * ft_strlen(s) + 1);
 	i = 0;
 	if (str == NULL)
 		return (NULL);
