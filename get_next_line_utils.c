@@ -14,6 +14,7 @@ char	*ft_strdup(const char *s)
 {
 	char	*str;
 	int		i;
+
 	str = (char *)malloc(sizeof(char) * ft_strlen(s) + 1);
 	i = 0;
 	if (str == NULL)
@@ -51,6 +52,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	str[i + c] = '\0';
 	return (str);
 }
+
 size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 {
 	size_t	c;
