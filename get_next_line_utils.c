@@ -19,7 +19,7 @@ char	*ft_strdup(const char *s)
 
 	str = (char *)malloc(sizeof(char) * ft_strlen(s) + 1);
 	i = 0;
-	if (str == NULL)
+	if (!str)
 		return (NULL);
 	while (s[i])
 	{
@@ -62,7 +62,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 	c = 0;
 	if (n == 0)
 		return (ft_strlen(src));
-	while (src[c] != '\0' && c < n - 1)
+	while (src[c] && c < n - 1)
 	{
 		dst[c] = src[c];
 		c++;
@@ -73,7 +73,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 
 void	newstat(char *stat)
 {
-	while (stat[0] != '\0' && stat[0] != '\n')
+	while (stat[0] && stat[0] != '\n')
 		ft_strlcpy(stat, stat + 1, ft_strlen(stat));
 	if (stat[0] == '\n')
 		ft_strlcpy(stat, stat + 1, ft_strlen(stat));

@@ -8,7 +8,7 @@ static char	*linea_hasta_n(char *linea)
 
 	j = 0;
 	i = 0;
-	while (linea[i] != '\n' && linea[i] != '\0')
+	while (linea[i] != '\n' && linea[i])
 		i++;
 	if (linea[i] == 0)
 		return (linea);
@@ -23,8 +23,7 @@ static char	*linea_hasta_n(char *linea)
 		i--;
 	}
 	str[j] = '\0';
-	free (linea);
-	return (str);
+	return (free (linea), str);
 }
 
 static int	hay_salto(char *str)
@@ -32,7 +31,7 @@ static int	hay_salto(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (str[i])
 	{
 		if (str[i] == '\n')
 			return (1);
@@ -56,20 +55,22 @@ char	*crear_linea(char *linea, char *stat, int i)
 {
 	char	*aux;
 
-	if (linea && i < 0)
+	if (!linea)
 	{
-		stat[0] = '\0';
-		return (free(linea), NULL);
-	}
-	if ((!linea && i <= 0))
-	{
-		stat[0] = '\0';
-		return (NULL);
-	}
-	if (linea == NULL)
+		if (i <= 0)
+		{
+			stat[0] = '\0';
+			return (NULL);
+		}
 		aux = ft_strdup(stat);
+	}
 	else
 	{
+		if (i < 0)
+		{
+			stat[0] = '\0';
+			return (free(linea), NULL);
+		}
 		aux = ft_strjoin(linea, stat);
 		free(linea);
 	}
@@ -86,7 +87,7 @@ char	*get_next_line(int fd)
 	linea = NULL;
 	if (fd < 0)
 		return (NULL);
-	if (stat[0] != '\0')
+	if (stat[0])
 		linea = crear_linea(linea, stat, 1);
 	while (i != 0)
 	{
