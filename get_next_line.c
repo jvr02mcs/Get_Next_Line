@@ -1,23 +1,17 @@
 #include "get_next_line.h"
 
-static void	newstat(char *stat)
-{
-	while (stat[0] != '\0' && stat[0] != '\n')
-		ft_strlcpy(stat, stat + 1, ft_strlen(stat));
-	if (stat[0] == '\n')
-		ft_strlcpy(stat, stat + 1, ft_strlen(stat));
-}
-
 static char	*linea_hasta_n(char *linea)
 {
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	j;
 	char	*str;
 
 	j = 0;
 	i = 0;
-	while (linea[i] != '\n')
+	while (linea[i] != '\n' && linea[i] != '\0')
 		i++;
+	if (linea[i] == 0)
+		return (linea);
 	i++;
 	str = malloc(sizeof(char) * i + 1);
 	if (!str)
@@ -35,7 +29,7 @@ static char	*linea_hasta_n(char *linea)
 
 static int	hay_salto(char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -49,61 +43,62 @@ static int	hay_salto(char *str)
 
 static int	leer(int fd, char *stat)
 {
-	char	aux[BUFFER_SIZE + 1];
-	char	*aux2;
 	int		i;
 
-	i = read(fd, aux, BUFFER_SIZE);
+	i = read(fd, stat, BUFFER_SIZE);
 	if (i < 0)
 		return (-1);
-	aux[i] = '\0';
-	if (stat[0] == '\0')
-		ft_strlcpy(stat, aux, ft_strlen(aux) + 1);
-	else
-	{
-		aux2 = ft_strjoin(stat, aux);
-		ft_strlcpy(stat, aux2, ft_strlen(aux2) + 1);
-		free(aux2);
-	}
+	stat[i] = '\0';
 	return (i);
 }
 
-char	*crear_linea(char *linea, char *stat)
+char	*crear_linea(char *linea, char *stat, int i)
 {
+	char	*aux;
+
+	if (linea && i < 0)
+	{
+		stat[0] = '\0';
+		return (free(linea), NULL);
+	}
+	if ((!linea && i <= 0))
+	{
+		stat[0] = '\0';
+		return (NULL);
+	}
 	if (linea == NULL)
-			linea = ft_strdup(stat);
+		aux = ft_strdup(stat);
 	else
 	{
+		aux = ft_strjoin(linea, stat);
 		free(linea);
-		linea = ft_strdup(stat);
 	}
-	return (linea);
+	return (aux);
 }
+
 char	*get_next_line(int fd)
 {
 	char		*linea;
 	static char	stat[BUFFER_SIZE + 1];
 	int			i;
 
-//	system("leaks a.out");
 	i = 1;
 	linea = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0)
 		return (NULL);
+	if (stat[0] != '\0')
+		linea = crear_linea(linea, stat, 1);
 	while (i != 0)
 	{
 		if (!hay_salto(stat))
 			i = leer(fd, stat);
-		if (i < 0 || stat[0] == '\0')
+		linea = crear_linea(linea, stat, i);
+		if (!linea)
 			return (NULL);
-		linea = crear_linea(linea, stat);
 		if (hay_salto(linea))
 			break ;
 	}
-	if (hay_salto(linea))
-		linea = linea_hasta_n(linea);
-//	printf("--------------------------------------------------------------\n");
-//	system("leaks a.out");
+	linea = linea_hasta_n(linea);
 	newstat(stat);
 	return (linea);
 }
@@ -113,13 +108,16 @@ char	*get_next_line(int fd)
 // 	int	fd;
 // 	int i = 3;
 
-// 	fd = open("/Users/jrubio-m/Desktop/42proyects/42cursus/Get_Next_Line/hola.txt", O_RDONLY);
+// 	fd = open("/Users/jrubio-m/Desktop/42proyects/42cursus/GNL/hola.txt", O_RDONLY);
 // 	// if (fd == -1)
 // 	// 	printf("error");
 // 	// else
+// 	char *line;
 // 	while (i != 0)
 // 	{
-// 		printf("final %i : %s\n", i, get_next_line(fd));
+// 		line = get_next_line(fd);
+// 		printf("final %i : %s\n", i, line);
+// 		free(line);
 // 		i--;
 // 	}
 // 	return (0);

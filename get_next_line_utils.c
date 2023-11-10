@@ -5,6 +5,8 @@ int	ft_strlen(const char *s)
 	int	c;
 
 	c = 0;
+	if (!s)
+		return (0);
 	while (s[c])
 		c++;
 	return (c);
@@ -67,4 +69,12 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 	}
 	dst[c] = '\0';
 	return (ft_strlen(src));
+}
+
+void	newstat(char *stat)
+{
+	while (stat[0] != '\0' && stat[0] != '\n')
+		ft_strlcpy(stat, stat + 1, ft_strlen(stat));
+	if (stat[0] == '\n')
+		ft_strlcpy(stat, stat + 1, ft_strlen(stat));
 }
