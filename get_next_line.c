@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/01 18:30:20 by jrubio-m          #+#    #+#             */
+/*   Updated: 2023/12/13 18:12:47 by codespace        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-static char	*line_until_n(char *line)
+static char	*line_until_jump(char *line)
 {
 	size_t	i;
 	size_t	j;
@@ -26,7 +38,7 @@ static char	*line_until_n(char *line)
 	return (free (line), str);
 }
 
-static int	isjump(char *str)
+static int	ft_isjump(char *str)
 {
 	size_t	i;
 
@@ -91,35 +103,15 @@ char	*get_next_line(int fd)
 		line = make_line(line, stat, 1);
 	while (i != 0)
 	{
-		if (!isjump(stat))
+		if (!ft_isjump(stat))
 			i = read_file(fd, stat);
 		line = make_line(line, stat, i);
 		if (!line)
 			return (NULL);
-		if (isjump(line))
+		if (ft_isjump(line))
 			break ;
 	}
-	line = line_until_n(line);
+	line = line_until_jump(line);
 	newstat(stat);
 	return (line);
 }
-
-int	main(void)
- {
-	int	fd;
-	int i = 1;
-
- 	fd = open("hola.txt", O_RDONLY);
- 	// if (fd == -1)
-// 	// 	printf("error");
- 	// else
- 	char *line;
- 	while (i != 4)
- 	{
- 		line = get_next_line(fd);
- 		printf("final %i : %s\n", i, line);
- 		free(line);
-		i++;
- 	}
- 	return (0);
- }
